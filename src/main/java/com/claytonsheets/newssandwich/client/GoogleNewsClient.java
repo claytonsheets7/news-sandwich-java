@@ -12,6 +12,7 @@ import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import com.claytonsheets.newssandwich.dto.Article;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author Jet Sunrise
  *
  */
+@Service
 public class GoogleNewsClient {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GoogleNewsClient.class);
@@ -88,6 +90,7 @@ public class GoogleNewsClient {
 	public Response fetchArticlesForSource(final String source, final AsyncHttpClient client) throws IOException {
 		final String url = baseUrl + "/top-headlines?sources=" + source + "&apiKey=" + apiKey;
 		Response response = null;
+		// gathering top headlines for the provided source
 		try {
 			response = client.prepareGet(url).execute().get();
 		} catch (InterruptedException | ExecutionException e) {
@@ -111,11 +114,14 @@ public class GoogleNewsClient {
 		final Set<String> sources = fetchSourceIDs();
 		final AsyncHttpClient client = new DefaultAsyncHttpClient();
 		List<Article> articles = new ArrayList<>();
+		// iterates over all available sources and places all articles in same list
 		sources.forEach(source -> {
 			Response response = null;
 			try {
 				response = fetchArticlesForSource(source, client);
 				JsonNode result = new ObjectMapper().readTree(response.toString()).get("articles");
+				// place each article from the given source's top headlines list into the main
+				// articles list
 				result.forEach(articleNode -> {
 					Article article = new Article();
 					article.setTitle(articleNode.get("title").asText());

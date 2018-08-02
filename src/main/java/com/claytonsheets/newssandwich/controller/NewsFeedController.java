@@ -1,5 +1,6 @@
 package com.claytonsheets.newssandwich.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,11 @@ public class NewsFeedController {
 	 * headlines for the day.
 	 * 
 	 * @return a list of articles
+	 * @throws IOException 
 	 * @see Article
 	 */
 	@RequestMapping("/news")
-	List<Article> articles() {
+	List<Article> articles() throws IOException {
 		return newsFeedService.fetchArticles();
 	}
 

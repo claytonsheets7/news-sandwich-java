@@ -1,8 +1,13 @@
 package com.claytonsheets.newssandwich.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.claytonsheets.newssandwich.client.GoogleNewsClient;
 import com.claytonsheets.newssandwich.dto.Article;
 
 /**
@@ -13,9 +18,14 @@ import com.claytonsheets.newssandwich.dto.Article;
  * @author Clayton Sheets
  * @see Article
  */
+@Service
 public class NewsFeedService {
 
-	public NewsFeedService() {
+	private GoogleNewsClient googleNewsClient;
+	
+	@Autowired
+	public NewsFeedService(final GoogleNewsClient googleNewsClient) {
+		this.googleNewsClient = googleNewsClient;
 	}
 
 	/**
@@ -25,18 +35,11 @@ public class NewsFeedService {
 	 * of the article list.
 	 * 
 	 * @return a list of articles
+	 * @throws IOException 
 	 * @see Article
 	 */
-	public List<Article> fetchArticles() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	/*
-	 * Gathers all available article sources from the google news API.
-	 */
-	private Set<String> fetchSources() {
-		
+	public List<Article> fetchArticles() throws IOException {
+		return googleNewsClient.fetchArticlesForSources();
 	}
 
 }
