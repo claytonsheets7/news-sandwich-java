@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.claytonsheets.newssandwich.dto.Article;
+import com.claytonsheets.newssandwich.service.ArticleService;
 import com.claytonsheets.newssandwich.service.NewsFeedService;
 
 /**
@@ -42,8 +43,8 @@ public class NewsFeedController {
 	 * @see Article
 	 */
 	@RequestMapping("/news")
-	List<Article> articles() throws IOException {
-		return newsFeedService.fetchArticles();
+	List<Article> news() throws IOException {
+		return newsFeedService.fetchAndFilterArticles();
 	}
 
 }

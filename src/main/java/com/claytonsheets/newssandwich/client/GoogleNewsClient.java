@@ -3,6 +3,7 @@ package com.claytonsheets.newssandwich.client;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -23,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * are provided for gathering all sources from google and grabbing the top
  * headlines from each source.
  * 
- * @author Jet Sunrise
+ * @author Clayton Sheets
  *
  */
 @Service
@@ -32,6 +33,7 @@ public class GoogleNewsClient {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GoogleNewsClient.class);
 
 	private final String baseUrl = "https://newsapi.org/v2";
+	// should be stored in a separate private repo
 	private final String apiKey = "edd0276dc8344c2abaeb40a3f6fb439f";
 
 	/**
@@ -66,7 +68,7 @@ public class GoogleNewsClient {
 		Set<String> sourceIds = new HashSet<>();
 		final Response response = fetchSources();
 		LOGGER.info(response.getResponseBody());
-		final JsonNode resultNode = new ObjectMapper().readTree(response.toString()).get("sources");
+		final JsonNode resultNode = new ObjectMapper().readTree(response.getResponseBody()).get("sources");
 		resultNode.forEach(source -> {
 			if (source != null && source.get("id") != null) {
 				sourceIds.add(source.get("id").asText());
@@ -79,10 +81,8 @@ public class GoogleNewsClient {
 	 * Makes a call to the google news API to gather the top headlines from a
 	 * particular source. An AsyncHttpClient is used to execute the request.
 	 * 
-	 * @param source
-	 *            a source id such as 'google-news'
-	 * @param client
-	 *            an AsyncHttpClient
+	 * @param source a source id such as 'google-news'
+	 * @param client an AsyncHttpClient
 	 * @return a Response object containing the top headlines of the provided source
 	 * @throws IOException
 	 * @see org.asynchttpclient.Response
@@ -95,9 +95,6 @@ public class GoogleNewsClient {
 			response = client.prepareGet(url).execute().get();
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			// prevent memory leak
-			client.close();
 		}
 		return response;
 	}
@@ -105,35 +102,51 @@ public class GoogleNewsClient {
 	/**
 	 * Gathers top headline articles from all available sources in the google news
 	 * API. For instance, the top headlines from NYTimes, NPR, LATimes, etc. will be
-	 * collected and placed into a List of type Article.
+	 * collected and placed into a List of type Article. Due to rate limiting the
+	 * number of requests needs to be minimized.
 	 * 
+	 * @param the number of requests you would like to execute
 	 * @return a List of type Article
 	 * @throws IOException
 	 */
-	public List<Article> fetchArticlesForSources() throws IOException {
+	public List<Article> fetchArticlesForAllSources(final int requests) throws IOException {
 		final Set<String> sources = fetchSourceIDs();
 		final AsyncHttpClient client = new DefaultAsyncHttpClient();
 		List<Article> articles = new ArrayList<>();
+
+		Set<String> subset = new HashSet<>();
+		int count = 0;
+		Iterator<String> iter = sources.iterator();
+		while (count < requests && iter.hasNext()) {
+			subset.add(iter.next());
+			count++;
+		}
+
 		// iterates over all available sources and places all articles in same list
-		sources.forEach(source -> {
+		subset.forEach(source -> {
 			Response response = null;
 			try {
 				response = fetchArticlesForSource(source, client);
-				JsonNode result = new ObjectMapper().readTree(response.toString()).get("articles");
+				JsonNode result = new ObjectMapper().readTree(response.getResponseBody()).get("articles");
 				// place each article from the given source's top headlines list into the main
 				// articles list
 				result.forEach(articleNode -> {
-					Article article = new Article();
-					article.setTitle(articleNode.get("title").asText());
-					article.setUrl(articleNode.get("url").asText());
-					article.setDescription(articleNode.get("description").asText());
-					article.setUrlToImage(articleNode.get("urlToImage").asText());
-					articles.add(article);
+					// don't add to list if any essential articles fields are null
+					if (articleNode.get("title") != null && articleNode.get("url") != null
+							&& articleNode.get("description") != null && articleNode.get("urlToImage") != null) {
+						Article article = new Article();
+						article.setTitle(articleNode.get("title").asText());
+						article.setUrl(articleNode.get("url").asText());
+						article.setDescription(articleNode.get("description").asText());
+						article.setUrlToImage(articleNode.get("urlToImage").asText());
+						articles.add(article);
+					}
 				});
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage());
 			}
 		});
+		client.close();
 		return articles;
 	}
 
