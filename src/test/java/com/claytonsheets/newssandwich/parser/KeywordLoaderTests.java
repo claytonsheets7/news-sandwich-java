@@ -1,4 +1,4 @@
-package com.claytonsheets.newssandwich.fileparser;
+package com.claytonsheets.newssandwich.parser;
 
 import java.util.Set;
 
@@ -6,7 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import fileparser.KeywordLoader;
+import parser.KeywordLoader;
 
 public class KeywordLoaderTests {
 
