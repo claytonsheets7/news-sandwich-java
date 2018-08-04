@@ -18,7 +18,7 @@ public class PhraseParser {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < phraseArr.length; i++) {
 			if (Character.isWhitespace(phraseArr[i]) || i == phrase.length() - 1) {
-				words.add(sb.toString());
+				words.add(sb.toString().toLowerCase());
 				sb = new StringBuilder();
 			} else if (Character.isAlphabetic(phraseArr[i])) {
 				sb.append(phraseArr[i]);

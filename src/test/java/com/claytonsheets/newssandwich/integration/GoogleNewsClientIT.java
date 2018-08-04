@@ -61,10 +61,7 @@ public class GoogleNewsClientIT {
 
 	@Test
 	public void fetchArticlesFromSources() throws IOException {
-		// it is very important to keep this number low as developer accounts are
-		// limited to 1000 requests per day
-		final int requests = 2;
-		final List<Article> articles = client.fetchArticlesForAllSources(requests);
+		final List<Article> articles = client.fetchArticlesForAllSources();
 		for(Article article : articles) {
 			softAssert.assertNotNull(article.getTitle(), "title should not be null");
 			softAssert.assertNotNull(article.getDescription(), "description should not be null");

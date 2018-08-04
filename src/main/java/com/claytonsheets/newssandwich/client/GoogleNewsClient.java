@@ -120,21 +120,13 @@ public class GoogleNewsClient {
 	 * @return a List of type Article
 	 * @throws IOException
 	 */
-	public List<Article> fetchArticlesForAllSources(final int requests) throws IOException {
+	public List<Article> fetchArticlesForAllSources() throws IOException {
 		final Set<String> sources = fetchSourceIDsFromCSV();
 		final AsyncHttpClient client = new DefaultAsyncHttpClient();
 		List<Article> articles = new ArrayList<>();
 
-		Set<String> subset = new HashSet<>();
-		int count = 0;
-		Iterator<String> iter = sources.iterator();
-		while (count < requests && iter.hasNext()) {
-			subset.add(iter.next());
-			count++;
-		}
-
 		// iterates over all available sources and places all articles in same list
-		subset.forEach(source -> {
+		sources.forEach(source -> {
 			Response response = null;
 			try {
 				response = fetchArticlesForSource(source, client);

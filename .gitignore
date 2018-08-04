@@ -31,5 +31,5 @@ mvnw
 mvnw.cmd
 
 ### TestNG ###
-test-output
-test-output-tests
+test-output*
+test-output-tests*

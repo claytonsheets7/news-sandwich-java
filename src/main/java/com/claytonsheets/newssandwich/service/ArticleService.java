@@ -35,9 +35,7 @@ public class ArticleService {
 	 * @see Article
 	 */
 	public List<Article> fetchArticles() throws IOException {
-		// keep this number low to avoid being rate limited
-		final int requests = 5;
-		return googleNewsClient.fetchArticlesForAllSources(requests);
+		return googleNewsClient.fetchArticlesForAllSources();
 	}
 
 }

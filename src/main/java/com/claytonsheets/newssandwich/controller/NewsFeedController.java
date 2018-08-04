@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.claytonsheets.newssandwich.dto.Article;
-import com.claytonsheets.newssandwich.service.ArticleService;
 import com.claytonsheets.newssandwich.service.NewsFeedService;
 
 /**
