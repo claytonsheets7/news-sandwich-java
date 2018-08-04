@@ -7,11 +7,11 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.claytonsheets.newssandwich.dto.Article;
 
-import fileparser.KeywordLoader;
+import parser.KeywordLoader;
+import parser.PhraseParser;
 
 /**
  * This class contains method that makes calls to the google news API to fetch
@@ -47,17 +47,17 @@ public class NewsFeedService {
 		final List<Article> articles = articleService.fetchArticles();
 		final KeywordLoader loader = new KeywordLoader();
 		final Set<String> keywords = loader.loadWordsFromCSV("src\\main\\resources\\static\\positive.csv");
-		
 		List<Article> filteredArticles = new ArrayList<>();
 		for(Article article : articles) {
-			// split title into array of words
-			String[] titleElements = StringUtils.split(article.getTitle().toLowerCase(), " ");
+			// split title into set of words
+			final PhraseParser parser = new PhraseParser();
+			final Set<String> elements = parser.extractWords(article.getTitle());
 			// loop over words in title and check if it contains any of the keywords
-			for(String element : titleElements) {
+			for(String element : elements) {
 				// remove non alphabetic characters from string
-				final String alphaTitle = element.replaceAll("[^a-zA-Z]", "");
-				if(keywords.contains(alphaTitle)) {
+				if(keywords.contains(element)) {
 					filteredArticles.add(article);
+					break;
 				}
 			}
 		}

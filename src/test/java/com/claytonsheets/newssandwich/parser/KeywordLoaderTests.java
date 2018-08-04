@@ -5,6 +5,7 @@ import java.util.Set;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import parser.KeywordLoader;
 
@@ -21,9 +22,11 @@ public class KeywordLoaderTests {
 
 	@Test
 	public void loadKeywordsFromCSVTest() {
+		final SoftAssert softAssert = new SoftAssert();
 		final Set<String> keywords = loader.loadWordsFromCSV(filePath);
 		// assert that a few of the values from the CSV file are in the list
-		Assert.assertTrue(keywords.contains("happy"), "Should have loaded word in file");
-		Assert.assertEquals(keywords.contains("laugh"), "Should have loaded word in file");
+		softAssert.assertTrue(keywords.contains("happy"), "Should have loaded word in file");
+		softAssert.assertEquals(keywords.contains("laugh"), "Should have loaded word in file");
+		softAssert.assertAll();
 	}
 }

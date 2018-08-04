@@ -39,7 +39,7 @@ public class NewsFeedController {
 	 * headlines for the day.
 	 * 
 	 * @return a list of articles
-	 * @throws IOException 
+	 * @throws IOException
 	 * @see Article
 	 */
 	@RequestMapping("/news")

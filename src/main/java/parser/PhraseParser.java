@@ -5,7 +5,7 @@ import java.util.Set;
 
 /**
  * 
- * @author Jet Sunrise
+ * @author Clayton Sheets
  *
  */
 public class PhraseParser {
@@ -16,8 +16,8 @@ public class PhraseParser {
 		Set<String> words = new HashSet<>();
 		final char[] phraseArr = phrase.toCharArray();
 		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<phraseArr.length; i++) {
-			if (Character.isWhitespace(phraseArr[i]) || i==phrase.length()-1) {
+		for (int i = 0; i < phraseArr.length; i++) {
+			if (Character.isWhitespace(phraseArr[i]) || i == phrase.length() - 1) {
 				words.add(sb.toString());
 				sb = new StringBuilder();
 			} else if (Character.isAlphabetic(phraseArr[i])) {

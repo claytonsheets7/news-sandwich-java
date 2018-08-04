@@ -19,6 +19,8 @@ import com.claytonsheets.newssandwich.dto.Article;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import parser.KeywordLoader;
+
 /**
  * This class acts as a client to make requests to the google news API. Methods
  * are provided for gathering all sources from google and grabbing the top
@@ -44,7 +46,8 @@ public class GoogleNewsClient {
 	 * @see org.asynchttpclient.Response
 	 */
 	private Response fetchSources() throws IOException {
-		final String sourceURL = baseUrl + "/sources?apiKey=" + apiKey;
+		final String sourceURL = baseUrl + "/sources?apiKey=" + apiKey + "&language=en";
+		;
 		AsyncHttpClient client = new DefaultAsyncHttpClient();
 		Response response = null;
 		try {
@@ -56,6 +59,14 @@ public class GoogleNewsClient {
 			client.close();
 		}
 		return response;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<String> fetchSourceIDsFromCSV() {
+		return new KeywordLoader().loadWordsFromCSV("src\\main\\resources\\static\\sources.csv");
 	}
 
 	/**
@@ -88,7 +99,7 @@ public class GoogleNewsClient {
 	 * @see org.asynchttpclient.Response
 	 */
 	public Response fetchArticlesForSource(final String source, final AsyncHttpClient client) throws IOException {
-		final String url = baseUrl + "/top-headlines?sources=" + source + "&apiKey=" + apiKey;
+		final String url = baseUrl + "/top-headlines?sources=" + source + "&apiKey=" + apiKey + "&language=en";
 		Response response = null;
 		// gathering top headlines for the provided source
 		try {
@@ -110,7 +121,7 @@ public class GoogleNewsClient {
 	 * @throws IOException
 	 */
 	public List<Article> fetchArticlesForAllSources(final int requests) throws IOException {
-		final Set<String> sources = fetchSourceIDs();
+		final Set<String> sources = fetchSourceIDsFromCSV();
 		final AsyncHttpClient client = new DefaultAsyncHttpClient();
 		List<Article> articles = new ArrayList<>();
 
@@ -127,7 +138,7 @@ public class GoogleNewsClient {
 			Response response = null;
 			try {
 				response = fetchArticlesForSource(source, client);
-				JsonNode result = new ObjectMapper().readTree(response.getResponseBody()).get("articles");
+				final JsonNode result = new ObjectMapper().readTree(response.getResponseBody()).get("articles");
 				// place each article from the given source's top headlines list into the main
 				// articles list
 				result.forEach(articleNode -> {
@@ -139,6 +150,7 @@ public class GoogleNewsClient {
 						article.setUrl(articleNode.get("url").asText());
 						article.setDescription(articleNode.get("description").asText());
 						article.setUrlToImage(articleNode.get("urlToImage").asText());
+						article.setSourceID(source);
 						articles.add(article);
 					}
 				});

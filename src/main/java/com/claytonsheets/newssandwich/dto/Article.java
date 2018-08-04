@@ -6,6 +6,7 @@ public class Article {
 	private String description;
 	private String url;
 	private String urlToImage;
+	private String sourceID;
 
 	public String getTitle() {
 		return title;
@@ -37,6 +38,14 @@ public class Article {
 
 	public void setUrlToImage(String urlToImage) {
 		this.urlToImage = urlToImage;
+	}
+
+	public String getSourceID() {
+		return sourceID;
+	}
+
+	public void setSourceID(String sourceID) {
+		this.sourceID = sourceID;
 	}
 
 }
