@@ -29,3 +29,7 @@
 .mvn/
 mvnw
 mvnw.cmd
+
+### TestNG ###
+test-output
+test-output-tests
