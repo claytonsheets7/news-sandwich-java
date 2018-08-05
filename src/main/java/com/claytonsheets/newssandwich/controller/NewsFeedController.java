@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.claytonsheets.newssandwich.dto.Article;
+import com.claytonsheets.newssandwich.service.CacheService;
 import com.claytonsheets.newssandwich.service.NewsFeedService;
 
 /**
@@ -18,6 +19,7 @@ import com.claytonsheets.newssandwich.service.NewsFeedService;
  * For example, to retrieve a article list sandwich, call the '/news' endpoint.
  * 
  * @author Clayton Sheets
+ * @see CacheService
  * @see NewsFeedService
  * @see Article
  *
@@ -25,11 +27,11 @@ import com.claytonsheets.newssandwich.service.NewsFeedService;
 @RestController
 public class NewsFeedController {
 
-	private NewsFeedService newsFeedService;
+	private CacheService cacheService;
 
 	@Autowired
-	public NewsFeedController(NewsFeedService newsFeedService) {
-		this.newsFeedService = newsFeedService;
+	public NewsFeedController(CacheService cacheService) {
+		this.cacheService = cacheService;
 	}
 
 	/**
@@ -39,11 +41,12 @@ public class NewsFeedController {
 	 * 
 	 * @return a list of articles
 	 * @throws IOException
+	 * @see NewsFeedService
 	 * @see Article
 	 */
 	@RequestMapping("/news")
 	List<Article> news() throws IOException {
-		return newsFeedService.fetchAndFilterArticles();
+		return cacheService.fetchArticles();
 	}
 
 }

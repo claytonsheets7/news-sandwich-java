@@ -2,16 +2,17 @@ package com.claytonsheets.newssandwich.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.claytonsheets.newssandwich.client.GoogleNewsClient;
 import com.claytonsheets.newssandwich.dto.Article;
-
-import parser.KeywordLoader;
-import parser.PhraseParser;
+import com.claytonsheets.newssandwich.parser.KeywordLoader;
+import com.claytonsheets.newssandwich.parser.PhraseParser;
 
 /**
  * This class contains method that makes calls to the google news API to fetch
@@ -25,11 +26,11 @@ import parser.PhraseParser;
 @Service
 public class NewsFeedService {
 
-	private ArticleService articleService;
+	private GoogleNewsClient googleNewsClient;
 
 	@Autowired
-	public NewsFeedService(final ArticleService articleService) {
-		this.articleService = articleService;
+	public NewsFeedService(final GoogleNewsClient googleNewsClient) {
+		this.googleNewsClient = googleNewsClient;
 	}
 
 	/**
@@ -44,9 +45,10 @@ public class NewsFeedService {
 	 * @see KeywordLoader
 	 */
 	public List<Article> fetchAndFilterArticles() throws IOException {
-		final List<Article> articles = articleService.fetchArticles();
+		final List<Article> articles = googleNewsClient.fetchArticlesForAllSources();
 		final KeywordLoader loader = new KeywordLoader();
 		final Set<String> positiveWords = loader.loadWordsFromCSV("src\\main\\resources\\static\\positive.csv");
+		final Set<String> usuallyPositiveWords = loader.loadWordsFromCSV("src\\main\\resources\\static\\usuallyPositive.csv");
 		final Set<String> negativeWords = loader.loadWordsFromCSV("src\\main\\resources\\static\\negative.csv");
 		List<Article> filteredArticles = new ArrayList<>();
 		for (final Article article : articles) {
@@ -54,28 +56,22 @@ public class NewsFeedService {
 			final PhraseParser parser = new PhraseParser();
 			Set<String> elements = parser.extractWords(article.getTitle());
 			elements.addAll(parser.extractWords(article.getDescription()));
-			boolean containedNegativeWord = false;
-			// loop to avoid articles that contain negative words
+			// loop over words in title and check if it contains any of the keywords
 			for (String element : elements) {
-				if (negativeWords.contains(element.toLowerCase())) {
-					containedNegativeWord = true;
-					break;
+				// remove non alphabetic characters from string
+				if (positiveWords.contains(element.toLowerCase()) && !negativeWords.contains(element.toLowerCase())) {
+					article.setWeight(article.getWeight() + 3);
+				}
+				if(usuallyPositiveWords.contains(element.toLowerCase())) {
+					article.setWeight(article.getWeight() + 1);
 				}
 			}
-			// loop over words in title and check if it contains any of the keywords
-			if (!containedNegativeWord) {
-				for (String element : elements) {
-					// remove non alphabetic characters from string
-					if (positiveWords.contains(element.toLowerCase())) {
-						filteredArticles.add(article);
-						break;
-					}
-				}
+			if (article.getWeight() > 0) {
+				filteredArticles.add(article);
 			}
 		}
+		Collections.sort(filteredArticles);
 		return filteredArticles;
-		// Stream<Article> filteredArticles = articles.stream().filter(article ->
-		// Collections.)
 	}
 
 }

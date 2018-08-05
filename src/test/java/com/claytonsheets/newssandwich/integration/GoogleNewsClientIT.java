@@ -16,8 +16,6 @@ import com.claytonsheets.newssandwich.dto.Article;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import parser.KeywordLoader;
-
 public class GoogleNewsClientIT {
 
 	private GoogleNewsClient client;
@@ -35,13 +33,6 @@ public class GoogleNewsClientIT {
 		sourceIDs.forEach(i -> System.out.println(i));
 		// check for a well known source ID
 		softAssert.assertNotNull(sourceIDs.contains("national-geographic"), "Should contain national-geographic source ID");
-		softAssert.assertAll();
-	}
-	
-	@Test
-	public void fetchSourceIDsFromCSV() {
-		Set<String> sourceIDs = client.fetchSourceIDsFromCSV();
-		
 		softAssert.assertAll();
 	}
 

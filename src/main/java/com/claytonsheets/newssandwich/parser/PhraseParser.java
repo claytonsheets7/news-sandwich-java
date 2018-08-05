@@ -1,4 +1,4 @@
-package parser;
+package com.claytonsheets.newssandwich.parser;
 
 import java.util.HashSet;
 import java.util.Set;

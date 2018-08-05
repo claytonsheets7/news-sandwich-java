@@ -16,10 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.claytonsheets.newssandwich.dto.Article;
+import com.claytonsheets.newssandwich.parser.KeywordLoader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import parser.KeywordLoader;
 
 /**
  * This class acts as a client to make requests to the google news API. Methods

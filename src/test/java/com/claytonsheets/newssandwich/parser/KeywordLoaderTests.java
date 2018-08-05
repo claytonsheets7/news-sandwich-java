@@ -7,7 +7,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
-import parser.KeywordLoader;
+import com.claytonsheets.newssandwich.parser.KeywordLoader;
 
 public class KeywordLoaderTests {
 

@@ -1,6 +1,7 @@
 package com.claytonsheets.newssandwich.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class CacheService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CacheService.class);
 
-	private List<Article> positiveArticles;
+	private List<Article> positiveArticles = new ArrayList<>();
 	private NewsFeedService newsFeedService;
 	private CacheThread cacheThread;
 
@@ -37,7 +38,8 @@ public class CacheService {
 
 	public synchronized List<Article> fetchArticles() throws IOException {
 		if (positiveArticles == null) {
-			positiveArticles = newsFeedService.fetchAndFilterArticles();
+			List<Article> articles = newsFeedService.fetchAndFilterArticles();
+			articles.forEach(i -> positiveArticles.add(i));
 		}
 		return positiveArticles;
 	}
@@ -47,7 +49,11 @@ public class CacheService {
 		public void run() {
 			while (true) {
 				try {
-					positiveArticles = newsFeedService.fetchAndFilterArticles();
+					final List<Article> articles = newsFeedService.fetchAndFilterArticles();
+					for(Article article : articles) {
+						positiveArticles.add(article);
+					}
+//					articles.forEach(i -> positiveArticles.add(i));
 					// update once every 6 hours
 					Thread.sleep(1000 * 60 * 60 * 6);
 				} catch (InterruptedException | IOException e) {
