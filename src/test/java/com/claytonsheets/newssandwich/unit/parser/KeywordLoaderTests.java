@@ -1,8 +1,7 @@
-package com.claytonsheets.newssandwich.parser;
+package com.claytonsheets.newssandwich.unit.parser;
 
 import java.util.Set;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;

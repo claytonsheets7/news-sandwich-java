@@ -1,4 +1,4 @@
-package com.claytonsheets.newssandwich.integration;
+package com.claytonsheets.newssandwich.integration.client;
 
 import java.io.IOException;
 import java.util.List;
