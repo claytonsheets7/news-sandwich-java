@@ -59,7 +59,11 @@ public class NewsFeedService {
 			// loop over words in title and check if it contains any of the keywords
 			for (String element : elements) {
 				// remove non alphabetic characters from string
-				if (positiveWords.contains(element.toLowerCase()) && !negativeWords.contains(element.toLowerCase())) {
+				if(negativeWords.contains(element.toLowerCase())) {
+					article.setWeight(0);
+					break;
+				}
+				if (positiveWords.contains(element.toLowerCase())) {
 					article.setWeight(article.getWeight() + 3);
 				}
 				if(usuallyPositiveWords.contains(element.toLowerCase())) {
