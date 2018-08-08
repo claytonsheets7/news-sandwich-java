@@ -38,13 +38,17 @@ public class CacheService {
 	}
 
 	public synchronized List<Article> fetchArticles() throws IOException {
-//		if (positiveArticles == null) {
-//			positiveArticles = newsFeedService.fetchAndFilterArticles();
-//		}
+		List<Article> articles = new ArrayList<>();
+		if (positiveArticles == null) {
+			positiveArticles = newsFeedService.fetchAndFilterArticles();
+		}
 		if(headlineArticles == null) {
 			headlineArticles = newsFeedService.fetchHeadlines();
 		}
-		return headlineArticles;
+		articles.addAll(headlineArticles.subList(0, 5));
+		articles.addAll(positiveArticles);
+		articles.addAll(headlineArticles.subList(5, headlineArticles.size()));
+		return articles;
 	}
 
 	class CacheThread extends Thread {
@@ -52,7 +56,7 @@ public class CacheService {
 		public void run() {
 			while (true) {
 				try {
-//					positiveArticles = newsFeedService.fetchAndFilterArticles();
+					positiveArticles = newsFeedService.fetchAndFilterArticles();
 					headlineArticles = newsFeedService.fetchHeadlines();
 //					articles.forEach(i -> positiveArticles.add(i));
 					// update once every 6 hours

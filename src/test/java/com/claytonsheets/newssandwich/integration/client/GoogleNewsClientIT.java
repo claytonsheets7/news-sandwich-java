@@ -37,7 +37,7 @@ public class GoogleNewsClientIT {
 	}
 
 	@Test
-	public void fetchArticlesForSourceID() throws IOException {
+	public void fetchArticlesForSourceIDTest() throws IOException {
 		final AsyncHttpClient asyncHttpClient = new DefaultAsyncHttpClient();
 		final Response response = client.fetchArticlesForSource("national-geographic", asyncHttpClient);
 		final JsonNode responseNode = new ObjectMapper().readTree(response.getResponseBody()).get("articles").get(0);
@@ -51,8 +51,20 @@ public class GoogleNewsClientIT {
 	}
 
 	@Test
-	public void fetchArticlesFromSources() throws IOException {
+	public void fetchArticlesFromSourcesTest() throws IOException {
 		final List<Article> articles = client.fetchArticlesForAllSources();
+		for(Article article : articles) {
+			softAssert.assertNotNull(article.getTitle(), "title should not be null");
+			softAssert.assertNotNull(article.getDescription(), "description should not be null");
+			softAssert.assertNotNull(article.getUrl(), "url should not be null");
+			softAssert.assertNotNull(article.getUrlToImage(), "urlToImage should not be null");
+		}
+		softAssert.assertAll();
+	}
+	
+	@Test
+	public void fetchGoogleNewsHeadlinesTest() throws IOException {
+		final List<Article> articles = client.fetchGoogleNewsHeadlines();
 		for(Article article : articles) {
 			softAssert.assertNotNull(article.getTitle(), "title should not be null");
 			softAssert.assertNotNull(article.getDescription(), "description should not be null");

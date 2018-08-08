@@ -128,22 +128,7 @@ public class GoogleNewsClient {
 			Response response = null;
 			try {
 				response = fetchArticlesForSource(source, client);
-				final JsonNode result = new ObjectMapper().readTree(response.getResponseBody()).get("articles");
-				// place each article from the given source's top headlines list into the main
-				// articles list
-				result.forEach(articleNode -> {
-					// don't add to list if any essential articles fields are null
-					if (articleNode.get("title") != null && articleNode.get("url") != null
-							&& articleNode.get("description") != null && articleNode.get("urlToImage") != null) {
-						Article article = new Article();
-						article.setTitle(articleNode.get("title").asText());
-						article.setUrl(articleNode.get("url").asText());
-						article.setDescription(articleNode.get("description").asText());
-						article.setUrlToImage(articleNode.get("urlToImage").asText());
-						article.setSourceID(source);
-						articles.add(article);
-					}
-				});
+				articles.addAll(JSONtoArticles(response));
 			} catch (IOException e) {
 				LOGGER.error(e.getMessage());
 			}
@@ -155,6 +140,7 @@ public class GoogleNewsClient {
 	/**
 	 * Gathers top headline articles from the google-news source.
 	 * 
+	 * @return a List of type Article
 	 * @throws IOException
 	 */
 	public List<Article> fetchGoogleNewsHeadlines() throws IOException {
@@ -164,22 +150,7 @@ public class GoogleNewsClient {
 		Response response = null;
 		try {
 			response = client.prepareGet(url).execute().get();
-			final JsonNode result = new ObjectMapper().readTree(response.getResponseBody()).get("articles");
-			// place each article from the given source's top headlines list into the main
-			// articles list
-			result.forEach(articleNode -> {
-				// don't add to list if any essential articles fields are null
-				if (articleNode.get("title") != null && articleNode.get("url") != null
-						&& articleNode.get("description") != null && articleNode.get("urlToImage") != null) {
-					Article article = new Article();
-					article.setTitle(articleNode.get("title").asText());
-					article.setUrl(articleNode.get("url").asText());
-					article.setDescription(articleNode.get("description").asText());
-					article.setUrlToImage(articleNode.get("urlToImage").asText());
-					article.setSourceID("google-news");
-					articles.add(article);
-				}
-			});
+			articles.addAll(JSONtoArticles(response));
 		} catch (InterruptedException | ExecutionException e) {
 			LOGGER.error(e.getMessage());
 		} finally {
@@ -189,6 +160,34 @@ public class GoogleNewsClient {
 				LOGGER.error(e.getMessage());
 			}
 		}
+		return articles;
+	}
+	
+	/**
+	 * Takes in a Response object and parses it into a list of articles.
+	 * 
+	 * @param response
+	 * @return a List of type Article
+	 * @throws IOException
+	 */
+	private List<Article> JSONtoArticles(final Response response) throws IOException {
+		List<Article> articles = new ArrayList<>();
+		final JsonNode result = new ObjectMapper().readTree(response.getResponseBody()).get("articles");
+		// place each article from the given source's top headlines list into the main
+		// articles list
+		result.forEach(articleNode -> {
+			// don't add to list if any essential articles fields are null
+			if (articleNode.get("title") != null && articleNode.get("url") != null
+					&& articleNode.get("description") != null && articleNode.get("urlToImage") != null) {
+				Article article = new Article();
+				article.setTitle(articleNode.get("title").asText());
+				article.setUrl(articleNode.get("url").asText());
+				article.setDescription(articleNode.get("description").asText());
+				article.setUrlToImage(articleNode.get("urlToImage").asText());
+				article.setSourceID("google-news");
+				articles.add(article);
+			}
+		});
 		return articles;
 	}
 
