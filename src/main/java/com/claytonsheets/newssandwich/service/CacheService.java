@@ -26,6 +26,7 @@ public class CacheService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CacheService.class);
 
 	private List<Article> positiveArticles = new ArrayList<>();
+	private List<Article> headlineArticles = new ArrayList<>();
 	private NewsFeedService newsFeedService;
 	private CacheThread cacheThread;
 
@@ -37,11 +38,13 @@ public class CacheService {
 	}
 
 	public synchronized List<Article> fetchArticles() throws IOException {
-		if (positiveArticles == null) {
-			List<Article> articles = newsFeedService.fetchAndFilterArticles();
-			articles.forEach(i -> positiveArticles.add(i));
+//		if (positiveArticles == null) {
+//			positiveArticles = newsFeedService.fetchAndFilterArticles();
+//		}
+		if(headlineArticles == null) {
+			headlineArticles = newsFeedService.fetchHeadlines();
 		}
-		return positiveArticles;
+		return headlineArticles;
 	}
 
 	class CacheThread extends Thread {
@@ -49,10 +52,8 @@ public class CacheService {
 		public void run() {
 			while (true) {
 				try {
-					final List<Article> articles = newsFeedService.fetchAndFilterArticles();
-					for(Article article : articles) {
-						positiveArticles.add(article);
-					}
+//					positiveArticles = newsFeedService.fetchAndFilterArticles();
+					headlineArticles = newsFeedService.fetchHeadlines();
 //					articles.forEach(i -> positiveArticles.add(i));
 					// update once every 6 hours
 					Thread.sleep(1000 * 60 * 60 * 6);

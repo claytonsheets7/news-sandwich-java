@@ -78,4 +78,15 @@ public class NewsFeedService {
 		return filteredArticles;
 	}
 
+	/**
+	 * Makes a get call to the google news API to fetch the top headlines.
+	 * 
+	 * @return a list of articles
+	 * @throws IOException
+	 * @see Article
+	 */
+	public List<Article> fetchHeadlines() throws IOException {
+		return googleNewsClient.fetchGoogleNewsHeadlines();
+	}
+
 }
