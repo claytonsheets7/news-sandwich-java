@@ -1,4 +1,4 @@
-package com.claytonsheets.newssandwich.service;
+package com.claytonsheets.newssandwich.unit.service;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
 import com.claytonsheets.newssandwich.dto.Article;
+import com.claytonsheets.newssandwich.service.CacheService;
+import com.claytonsheets.newssandwich.service.NewsFeedService;
 
 import static org.mockito.Mockito.*;
 
@@ -39,21 +41,9 @@ public class CacheServiceTests {
 		article.setSourceID("source-id");
 		article.setUrl("http://someurl.cool");
 		article.setUrlToImage("http://someurltoimage.cool");
-		List<Article> expected = Arrays.asList(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		expected.add(article);
-		when(newsFeedService.fetchAndFilterArticles()).thenReturn(expected);
+		List<Article> expected = Arrays.asList(article, article, article, article, article, article, article, article, article, article);
 		when(newsFeedService.fetchHeadlines()).thenReturn(expected);
+		when(newsFeedService.fetchAndFilterArticles()).thenReturn(expected);
 		final List<Article> actual = cacheService.fetchArticles();
 		
 		softAssert.assertEquals(actual.get(0), expected.get(0), "Articles should match");

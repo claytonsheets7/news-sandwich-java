@@ -44,7 +44,7 @@ public class GoogleNewsClient {
 	 */
 	private Response fetchSources() throws IOException {
 		final String sourceURL = baseUrl + "/sources?apiKey=" + apiKey + "&language=en";
-		AsyncHttpClient client = new DefaultAsyncHttpClient();
+		final AsyncHttpClient client = new DefaultAsyncHttpClient();
 		Response response = null;
 		try {
 			response = client.prepareGet(sourceURL).execute().get();
@@ -58,8 +58,9 @@ public class GoogleNewsClient {
 	}
 
 	/**
+	 * Loads up a list of news source IDs from a CSV file.
 	 * 
-	 * @return
+	 * @return a Set of type String
 	 */
 	public Set<String> fetchSourceIDsFromCSV() {
 		return new KeywordLoader().loadWordsFromCSV("src\\main\\resources\\static\\sources.csv");
@@ -164,7 +165,7 @@ public class GoogleNewsClient {
 	/**
 	 * Takes in a Response object and parses it into a list of articles.
 	 * 
-	 * @param response
+	 * @param Response
 	 * @return a List of type Article
 	 * @throws IOException
 	 */
