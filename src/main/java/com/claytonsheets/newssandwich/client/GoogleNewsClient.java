@@ -33,8 +33,7 @@ public class GoogleNewsClient {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GoogleNewsClient.class);
 
 	private final String baseUrl = "https://newsapi.org/v2";
-	// should be stored in a separate private repo
-	private final String apiKey = "edd0276dc8344c2abaeb40a3f6fb439f";
+	private final String apiKey = Keys.GOOGLE_API_KEY.getKey();
 
 	/**
 	 * Makes a call to the google new API to fetch all available news sources.
