@@ -7,6 +7,8 @@ import java.util.Set;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -17,6 +19,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GoogleNewsClientIT {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoogleNewsClientIT.class);
 
 	private GoogleNewsClient client;
 	private SoftAssert softAssert;
@@ -30,7 +34,7 @@ public class GoogleNewsClientIT {
 	@Test
 	public void fetchSourceIDsTest() throws IOException {
 		final Set<String> sourceIDs = client.fetchSourceIDs();
-		sourceIDs.forEach(i -> System.out.println(i));
+		sourceIDs.forEach(i -> LOGGER.info(i));
 		// check for a well known source ID
 		softAssert.assertNotNull(sourceIDs.contains("national-geographic"), "Should contain national-geographic source ID");
 		softAssert.assertAll();

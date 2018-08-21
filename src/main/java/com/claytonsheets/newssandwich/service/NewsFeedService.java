@@ -20,7 +20,7 @@ import com.claytonsheets.newssandwich.parser.PhraseParser;
  * articles based on a list of words provided via a .csv file.
  * 
  * @author Clayton Sheets
- * @see ArticleService
+ * @see GoogleNewsClient
  * @see Article
  */
 @Service

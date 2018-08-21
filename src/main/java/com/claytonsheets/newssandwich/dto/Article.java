@@ -1,6 +1,6 @@
 package com.claytonsheets.newssandwich.dto;
 
-public class Article implements Comparable<Article>{
+public class Article implements Comparable<Article> {
 
 	private String title;
 	private String description;
@@ -48,7 +48,7 @@ public class Article implements Comparable<Article>{
 	public void setSourceID(String sourceID) {
 		this.sourceID = sourceID;
 	}
-	
+
 	public int getWeight() {
 		return weight;
 	}
@@ -60,6 +60,19 @@ public class Article implements Comparable<Article>{
 	@Override
 	public int compareTo(Article article) {
 		return article.getWeight() - weight;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Article)) {
+			return false;
+		}
+		Article article = (Article) o;
+		return (article.getTitle().compareTo(this.getTitle()) == 0
+				&& article.getDescription().equals(this.getDescription())
+				&& article.getSourceID().equals(this.getSourceID()) 
+				&& article.getUrl().equals(this.getUrl())
+				&& article.getUrlToImage().equals(this.getUrlToImage()));
 	}
 
 }
