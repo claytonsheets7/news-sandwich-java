@@ -22,8 +22,8 @@ public class PhraseParserTests {
 	@Test
 	public void parsePhraseTest() {
 		final SoftAssert softAssert = new SoftAssert();
-		final String phrase = "this is a phrase: I, want,, a clean// list of \\words. 4de3spite$ having $o many str&nge character$s^.";
-		final Set<String> expected = new HashSet<>(Arrays.asList("this", "is", "a", "phrase", "I", "want", "a", "clean",
+		final String phrase = "this is a phrase: want,, a clean// list of \\words. 4de3spite$ having $o many str&nge character$s^.";
+		final Set<String> expected = new HashSet<>(Arrays.asList("this", "is", "a", "phrase", "want", "a", "clean",
 				"list", "of", "words", "despite", "having", "o", "many", "strnge", "characters"));
 		final Set<String> actual = new HashSet<>(parser.extractWords(phrase));
 		softAssert.assertEquals(actual.size(), expected.size(), "Should be the same size");

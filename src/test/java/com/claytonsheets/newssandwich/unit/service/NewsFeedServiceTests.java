@@ -1,4 +1,4 @@
-package com.claytonsheets.newssandwich.service;
+package com.claytonsheets.newssandwich.unit.service;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,6 +16,7 @@ import org.testng.asserts.SoftAssert;
 
 import com.claytonsheets.newssandwich.client.GoogleNewsClient;
 import com.claytonsheets.newssandwich.dto.Article;
+import com.claytonsheets.newssandwich.service.NewsFeedService;
 
 public class NewsFeedServiceTests {
 	

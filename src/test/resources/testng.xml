@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="tests" parallel="false">
+
+    <test name="tests" preserve-order="true" verbose="2">
+        <packages>
+            <package name="com.claytonsheets.newssandwich.unit.*"/>
+            <package name="com.claytonsheets.newssandwich.integration.*"/>
+        </packages>
+    </test>
+
+</suite>

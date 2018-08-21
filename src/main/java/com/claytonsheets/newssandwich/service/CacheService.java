@@ -37,20 +37,35 @@ public class CacheService {
 		cacheThread.start();
 	}
 
+	/**
+	 * Gathers the top headlines and positively weighted articles to form a list
+	 * that starts with positive articles, has normal headlines in the middle, and
+	 * ends with positive articles.
+	 * 
+	 * @return a List of type Article
+	 * @throws IOException
+	 */
 	public synchronized List<Article> fetchArticles() throws IOException {
 		List<Article> articles = new ArrayList<>();
-		if (positiveArticles == null) {
+		if (positiveArticles.size() == 0) {
 			positiveArticles = newsFeedService.fetchAndFilterArticles();
 		}
-		if(headlineArticles == null) {
+		if (headlineArticles.size() == 0) {
 			headlineArticles = newsFeedService.fetchHeadlines();
 		}
-		articles.addAll(headlineArticles.subList(0, 5));
-		articles.addAll(positiveArticles);
-		articles.addAll(headlineArticles.subList(5, headlineArticles.size()));
+		articles.addAll(positiveArticles.subList(0, 3));
+		articles.addAll(headlineArticles);
+		articles.addAll(positiveArticles.subList(3, 6));
 		return articles;
 	}
 
+	/**
+	 * This class makes the initial calls to grab the top headlines and positive
+	 * articles.
+	 * 
+	 * @author Clayton Sheets
+	 *
+	 */
 	class CacheThread extends Thread {
 		@Override
 		public void run() {
@@ -58,9 +73,8 @@ public class CacheService {
 				try {
 					positiveArticles = newsFeedService.fetchAndFilterArticles();
 					headlineArticles = newsFeedService.fetchHeadlines();
-//					articles.forEach(i -> positiveArticles.add(i));
-					// update once every 6 hours
-					Thread.sleep(1000 * 60 * 60 * 6);
+					// update once every 12 hours
+					Thread.sleep(1000 * 60 * 60 * 12);
 				} catch (InterruptedException | IOException e) {
 					LOGGER.error(e.getMessage());
 				}
