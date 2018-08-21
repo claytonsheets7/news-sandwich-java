@@ -45,7 +45,6 @@ public class GoogleNewsClient {
 	 */
 	private Response fetchSources() throws IOException {
 		final String sourceURL = baseUrl + "/sources?apiKey=" + apiKey + "&language=en";
-		;
 		AsyncHttpClient client = new DefaultAsyncHttpClient();
 		Response response = null;
 		try {
@@ -136,7 +135,7 @@ public class GoogleNewsClient {
 		client.close();
 		return articles;
 	}
-	
+
 	/**
 	 * Gathers top headline articles from the google-news source.
 	 * 
@@ -162,7 +161,7 @@ public class GoogleNewsClient {
 		}
 		return articles;
 	}
-	
+
 	/**
 	 * Takes in a Response object and parses it into a list of articles.
 	 * 
