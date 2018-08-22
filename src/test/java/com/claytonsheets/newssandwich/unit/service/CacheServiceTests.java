@@ -43,7 +43,7 @@ public class CacheServiceTests {
 		article.setUrlToImage("http://someurltoimage.cool");
 		List<Article> expected = Arrays.asList(article, article, article, article, article, article, article, article, article, article);
 		when(newsFeedService.fetchHeadlines()).thenReturn(expected);
-		when(newsFeedService.fetchAndFilterArticles()).thenReturn(expected);
+		when(newsFeedService.fetchArticles()).thenReturn(expected);
 		final List<Article> actual = cacheService.fetchArticles();
 		
 		softAssert.assertEquals(actual.get(0), expected.get(0), "Articles should match");

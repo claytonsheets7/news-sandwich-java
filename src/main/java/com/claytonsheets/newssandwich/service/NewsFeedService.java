@@ -44,11 +44,11 @@ public class NewsFeedService {
 	 * @see Article
 	 * @see KeywordLoader
 	 */
-	public List<Article> fetchAndFilterArticles() throws IOException {
-		final List<Article> articles = googleNewsClient.fetchArticlesForAllSources();
+	private List<Article> filterArticles(final List<Article> articles) throws IOException {
 		final KeywordLoader loader = new KeywordLoader();
 		final Set<String> positiveWords = loader.loadWordsFromCSV("src\\main\\resources\\static\\positive.csv");
-		final Set<String> usuallyPositiveWords = loader.loadWordsFromCSV("src\\main\\resources\\static\\usuallyPositive.csv");
+		final Set<String> usuallyPositiveWords = loader
+				.loadWordsFromCSV("src\\main\\resources\\static\\usuallyPositive.csv");
 		final Set<String> negativeWords = loader.loadWordsFromCSV("src\\main\\resources\\static\\negative.csv");
 		List<Article> filteredArticles = new ArrayList<>();
 		for (final Article article : articles) {
@@ -59,14 +59,14 @@ public class NewsFeedService {
 			// loop over words in title and check if it contains any of the keywords
 			for (String element : elements) {
 				// remove non alphabetic characters from string
-				if(negativeWords.contains(element.toLowerCase())) {
+				if (negativeWords.contains(element.toLowerCase())) {
 					article.setWeight(0);
 					break;
 				}
 				if (positiveWords.contains(element.toLowerCase())) {
 					article.setWeight(article.getWeight() + 3);
 				}
-				if(usuallyPositiveWords.contains(element.toLowerCase())) {
+				if (usuallyPositiveWords.contains(element.toLowerCase())) {
 					article.setWeight(article.getWeight() + 1);
 				}
 			}
@@ -74,8 +74,22 @@ public class NewsFeedService {
 				filteredArticles.add(article);
 			}
 		}
-		Collections.sort(filteredArticles);
 		return filteredArticles;
+	}
+
+	/**
+	 * Gathers the articles that are perceived to be positive and then then sorts
+	 * the articles with the most positive on top.
+	 * 
+	 * @return a list of articles
+	 * @throws IOException
+	 * @see Article
+	 * @see KeywordLoader
+	 */
+	public List<Article> fetchArticles() throws IOException {
+		List<Article> articles = filterArticles(googleNewsClient.fetchArticlesForAllSources());
+		Collections.sort(articles);
+		return articles;
 	}
 
 	/**

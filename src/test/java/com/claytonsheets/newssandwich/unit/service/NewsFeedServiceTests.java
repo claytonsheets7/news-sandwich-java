@@ -59,7 +59,7 @@ public class NewsFeedServiceTests {
 		article.setTitle("amazing happy great");
 		final List<Article> expected = Arrays.asList(article);
 		when(client.fetchArticlesForAllSources()).thenReturn(expected);
-		final List<Article> actual = service.fetchAndFilterArticles();
+		final List<Article> actual = service.fetchArticles();
 		
 		verify(client).fetchArticlesForAllSources();
 		softAssert.assertEquals(actual.size(), expected.size(), "Should be the same size lists");
@@ -73,7 +73,7 @@ public class NewsFeedServiceTests {
 		article.setTitle("death horrible brutal");
 		final List<Article> expected = Arrays.asList(article);
 		when(client.fetchArticlesForAllSources()).thenReturn(expected);
-		final List<Article> actual = service.fetchAndFilterArticles();
+		final List<Article> actual = service.fetchArticles();
 		
 		verify(client).fetchArticlesForAllSources();
 		softAssert.assertEquals(actual.size(), 0, "Article should be filtered out");
