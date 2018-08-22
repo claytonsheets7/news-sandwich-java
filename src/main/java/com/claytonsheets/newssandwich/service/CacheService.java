@@ -48,7 +48,7 @@ public class CacheService {
 	public synchronized List<Article> fetchArticles() throws IOException {
 		List<Article> articles = new ArrayList<>();
 		if (positiveArticles.size() == 0) {
-			positiveArticles = newsFeedService.fetchAndFilterArticles();
+			positiveArticles = newsFeedService.fetchArticles();
 		}
 		if (headlineArticles.size() == 0) {
 			headlineArticles = newsFeedService.fetchHeadlines();
@@ -71,7 +71,7 @@ public class CacheService {
 		public void run() {
 			while (true) {
 				try {
-					positiveArticles = newsFeedService.fetchAndFilterArticles();
+					positiveArticles = newsFeedService.fetchArticles();
 					headlineArticles = newsFeedService.fetchHeadlines();
 					// update once every 12 hours
 					Thread.sleep(1000 * 60 * 60 * 12);
